@@ -16,6 +16,7 @@ public class Character
     protected CharacterType type { get; set; }
     
     public static float horizontalInPut;
+    public static bool isAttacking;
     protected Rigidbody2D body { get; set; }
     protected Animator animator { get; set; }
     protected BoxCollider2D collider2D { get; set; }
@@ -29,6 +30,7 @@ public class Character
         animator = gameObject.GetComponent<Animator>();
         collider2D = gameObject.GetComponent<BoxCollider2D>();
         transform = gameObject.transform;
+        isAttacking = false;
     }
 
     internal void Update()
@@ -42,16 +44,19 @@ public class Character
 
     private void InputHandle()
     {
-        horizontalInPut = Input.GetAxis("Horizontal");
-        if (horizontalInPut > .015f)
+        if (!isAttacking)
         {
-            body.velocity = new Vector2(speed * horizontalInPut, body.velocity.y);
-            direction = Direction.RIGHT;
-        }
-        else if (horizontalInPut < -.015f)
-        {
-            body.velocity = new Vector2(speed * horizontalInPut, body.velocity.y);
-            direction = Direction.LEFT;
+            horizontalInPut = Input.GetAxis("Horizontal");
+            if (horizontalInPut > .015f)
+            {
+                body.velocity = new Vector2(speed * horizontalInPut, body.velocity.y);
+                direction = Direction.RIGHT;
+            }
+            else if (horizontalInPut < -.015f)
+            {
+                body.velocity = new Vector2(speed * horizontalInPut, body.velocity.y);
+                direction = Direction.LEFT;
+            }
         }
     }
     
@@ -59,9 +64,11 @@ public class Character
     {
         if(Input.GetButtonDown("Attack") && PlayerController.grounded)
         {
+            isAttacking = true;
             animator.SetTrigger("Attack");
         }
     }
+    
     public void PlayerAttackPush()
     {
         switch (direction)
@@ -79,7 +86,7 @@ public class Character
         InitMonster.monster.healthPoint -= attack;
         Debug.Log(InitMonster.monster.healthPoint);
     }
-    private void PlayerJump()
+    public void PlayerJump()
     {
         if(Input.GetButtonDown("Jump") && PlayerController.grounded)
         {
@@ -89,7 +96,7 @@ public class Character
     private void UpdateStateAnimator()
     {
         AnimatorState animatorState;
-        if(horizontalInPut < -.15f || horizontalInPut > .15f)
+        if((horizontalInPut < -.15f || horizontalInPut > .15f) && !isAttacking)
         {
             animatorState = AnimatorState.RUN;
             if (horizontalInPut > .15f)

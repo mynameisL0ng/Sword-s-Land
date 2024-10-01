@@ -11,9 +11,12 @@ public class PlayerController : MonoBehaviour
     public static bool grounded;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip[] audioClips;
+    private Rigidbody2D body;
+    private string previousState;
 
     void Start()
     {
+        body = GetComponent<Rigidbody2D>();
         grounded = true;
         player = InitPlayer.player;
         audioSource = GetComponent<AudioSource>();
@@ -57,11 +60,19 @@ public class PlayerController : MonoBehaviour
         {
             nameState = Character.AnimatorState.RUN.ToString();
         }
+        else if(body.velocity.y > .1f)
+        {
+            nameState = Character.AnimatorState.JUMP.ToString();
+        }
         else
         {
             nameState = Character.AnimatorState.IDLE.ToString();
         }
-        StateAudioClip(nameState);
+        if (nameState != previousState)
+        {
+            StateAudioClip(nameState);
+            previousState = nameState;
+        }
     }
     private void StateAudioClip(string nameState)
     {
@@ -75,10 +86,22 @@ public class PlayerController : MonoBehaviour
             {
                 if (audioClips[i].name == nameState)
                 {
+                    AudioSourceLoop(nameState);
                     audioSource.clip = audioClips[i];
                     audioSource.enabled = true;
+                    audioSource.Play();
+                    break;
                 }
             }
         }
+    }
+    private void AudioSourceLoop(string nameState)
+    {
+        if(nameState == "RUN") audioSource.loop = true;
+        else audioSource.loop = false;
+    }
+    public void PlayerEndAttacking()
+    {
+        Character.isAttacking = false;
     }
 }
