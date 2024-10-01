@@ -1,7 +1,7 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
 
-public class Character
+public abstract class Character
 {
     protected int healthPoint { get; set; }
     protected int magicPoint { get; set; }
@@ -17,6 +17,7 @@ public class Character
     
     public static float horizontalInPut;
     public static bool isAttacking;
+    protected bool isHoldRightMouse = false;
     protected Rigidbody2D body { get; set; }
     protected Animator animator { get; set; }
     protected BoxCollider2D collider2D { get; set; }
@@ -36,10 +37,11 @@ public class Character
     internal void Update()
     {
         PlayerJump();
+        PlayerAttack();
         InputHandle();
         FlipSprite();
         UpdateStateAnimator();
-        PlayerAttack();
+        PlayerSkillDefault();
     }
 
     private void InputHandle()
@@ -64,10 +66,12 @@ public class Character
     {
         if(Input.GetButtonDown("Attack") && PlayerController.grounded)
         {
+            horizontalInPut = 0f;
             isAttacking = true;
             animator.SetTrigger("Attack");
         }
     }
+    public abstract void PlayerSkillDefault();
     
     public void PlayerAttackPush()
     {
@@ -88,7 +92,7 @@ public class Character
     }
     public void PlayerJump()
     {
-        if(Input.GetButtonDown("Jump") && PlayerController.grounded)
+        if(Input.GetButtonDown("Jump") && PlayerController.grounded && !isAttacking)
         {
             body.velocity = new Vector2(body.velocity.x,jumpPower);
         }

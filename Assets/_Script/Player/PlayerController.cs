@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
     private void Player_VFX()
     {
         string nameState;
-        if ((Character.horizontalInPut > .35f || Character.horizontalInPut < -.35f) && grounded)
+        if ((Character.horizontalInPut > .5f || Character.horizontalInPut < -.5f) && grounded)
         {
             nameState = Character.AnimatorState.RUN.ToString();
         }

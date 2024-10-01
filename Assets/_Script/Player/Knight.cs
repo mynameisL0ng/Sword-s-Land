@@ -11,4 +11,8 @@ public class Knight : Character
         type = CharacterType.KNIGHT;
         direction = Direction.RIGHT;
     }
+    public override void PlayerSkillDefault()
+    {
+        
+    }
 }
