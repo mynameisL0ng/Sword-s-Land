@@ -12,15 +12,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip[] audioClips;
     private Rigidbody2D body;
+    private Animator animator;
     private string previousState;
+    private bool isHeavyAttack;
 
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
         grounded = true;
         player = InitPlayer.player;
         audioSource = GetComponent<AudioSource>();
         audioSource.enabled = false;
+        isHeavyAttack = false;
     }
 
     void Update()
@@ -30,6 +34,7 @@ public class PlayerController : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        IsHeavyAttack();
         isGrounded();
     }
     private bool isGrounded()
@@ -42,11 +47,35 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawWireCube(transform.position - transform.up * castDistance, groundCheckSize);
     }*/
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other) // player need attack push can deal damage.
     {
-        if (other.gameObject.CompareTag("Enemy"))
+        if(other.gameObject.CompareTag("Enemy"))
         {
-            player.PlayerDealDamage();
+            Monster monster = other.GetComponent<MonsterController>().initMonster.monster;
+            if(monster != null)
+            {
+                if (isHeavyAttack)
+                {
+                    monster.TakeHit(player.attackDamage * 3.5f);
+                    isHeavyAttack = false;
+                }
+                else
+                    monster.TakeHit(player.attackDamage);
+            }
+        }
+    }
+    private void IsHeavyAttack()
+    {
+        if(InitPlayer.isWarrior)
+        {
+            if (Input.GetButton("HeavyAttack") && Warrior.holdTime < Warrior.requireHoldTime)
+            {
+                Warrior.holdTime += Time.deltaTime;
+                if (Warrior.holdTime >= Warrior.requireHoldTime)
+                {
+                    isHeavyAttack = true;
+                }
+            }
         }
     }
     private void PlayerPushAttackForce()

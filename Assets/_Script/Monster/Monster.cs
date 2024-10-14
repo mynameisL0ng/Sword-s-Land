@@ -1,28 +1,40 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class Monster
 {
-    public int healthPoint {  get; set; }
-    protected int startHealthPoint { get; set; }
-    protected int attack { get; set; }
+    public float healthPoint {  get; set; }
+    public float currentHealth { get; set; }
+    public float attackDamage { get; set; }
     protected float speed { get; set; }
+    private bool canAttack { get; set; }
+    public bool Death { get; set; }
+    private float timeCooldown { get; set; }
     protected enum Direction { LEFT, RIGHT }
-    protected enum StateAnimator { IDLE , RUN , DEATH , TAKEHIT}
+    protected enum StateAnimator { IDLE , RUN }
     protected Direction direction { get; set; }
     protected StateAnimator stateAnimator { get; set; }
+    protected GameObject monsterObject { get; set; }
+
     protected Vector2 oldPosition { get; set; }
+    protected Vector2 pushBack { get; set; }
     protected Rigidbody2D body { get; set; }
     protected Animator animator { get; set; }
     protected BoxCollider2D collider2D { get; set; }
     protected Transform transform { get; set; }
     protected Monster(GameObject gameObject)
     {
+        monsterObject = gameObject;
+        timeCooldown = 3f;
+        canAttack = true;
+        pushBack = new Vector2(1.5f, 1.5f);
         body = gameObject.GetComponent<Rigidbody2D>();
         body.gravityScale = 1.496f;
         animator = gameObject.GetComponent<Animator>();
         collider2D = gameObject.GetComponent<BoxCollider2D>();
         transform = gameObject.transform;
         oldPosition = transform.position;
+        Death = false;
     }
     internal void Update()
     {
@@ -30,48 +42,73 @@ public abstract class Monster
         FlipSprite();
     }
 
-    public abstract void MonsterMovement();
     private void MonsterAction()
     {
-        if (InitMonster.hitPlayer.collider != null)
+        if(!Death)
         {
-            if (Vector2.Distance(transform.position, InitMonster.hitPlayer.collider.transform.position) > 2)
+            if (monsterObject.GetComponent<MonsterController>().hitPlayer.collider != null)
             {
-                MonsterFlipToPlayer();
-                MonsterMovement();
+                if (Vector2.Distance(transform.position, monsterObject.GetComponent<MonsterController>().hitPlayer.collider.transform.position) > 2)
+                {
+                    MonsterFlipToPlayer();
+                    MonsterMovement();
+                    CooldownAttack();
+                }
+                else if (Vector2.Distance(transform.position, monsterObject.GetComponent<MonsterController>().hitPlayer.collider.transform.position) <= 2 && canAttack && timeCooldown <= 0)
+                {
+                    MonsterAttackAnimation();
+                    CooldownAttack();
+                    // attack animation
+                }
+                else
+                {
+                    stateAnimator = StateAnimator.IDLE;
+                    CooldownAttack();
+                    SetStateAnimator((int)stateAnimator);
+                }
             }
             else
             {
-                stateAnimator = StateAnimator.IDLE;
-                SetStateAnimator((int)stateAnimator);
+                MonsterFlipToOldPos();
+                if (Vector2.Distance(transform.position, oldPosition) < .5f)
+                {
+                    stateAnimator = StateAnimator.IDLE;
+                    SetStateAnimator((int)stateAnimator);
+                }
+                transform.position = Vector2.MoveTowards(transform.position, oldPosition, 2 * Time.deltaTime);
             }
         }
-        else
-        {
-            MonsterFlipToOldPos();
-            if(Vector2.Distance(transform.position, oldPosition) < .1f)
-            {
-                stateAnimator = StateAnimator.IDLE;
-                SetStateAnimator((int)stateAnimator);
-            }
-            transform.position = Vector2.MoveTowards(transform.position, oldPosition, 1 * Time.deltaTime);
-        }
+    }
+    public void MonsterMovement()
+    {
+        stateAnimator = StateAnimator.RUN;
+        SetStateAnimator((int)stateAnimator);
+        /*transform.position = Vector2.MoveTowards(transform.position, MonsterController.hitPlayer.transform.position, speed * Time.deltaTime);*/
+        transform.position = Vector2.Lerp(transform.position, monsterObject.GetComponent<MonsterController>().hitPlayer.transform.position, speed * Time.deltaTime);
+    }
+    private void MonsterAttackAnimation()
+    {
+        animator.SetTrigger("Attack");
+        canAttack = false;
     }
     private void FlipSprite()
     {
-        switch (direction)
+        if(!Death)
         {
-            case Direction.LEFT:
-                transform.localScale = new Vector2(-1, transform.localScale.y);
-                break;
-            case Direction.RIGHT:
-                transform.localScale = new Vector2(1, transform.localScale.y);
-                break;
+            switch (direction)
+            {
+                case Direction.LEFT:
+                    transform.localScale = new Vector2(-1, transform.localScale.y);
+                    break;
+                case Direction.RIGHT:
+                    transform.localScale = new Vector2(1, transform.localScale.y);
+                    break;
+            }
         }
     }
     private void MonsterFlipToPlayer()
     {
-        if(transform.position.x > InitMonster.hitPlayer.transform.position.x)
+        if(transform.position.x > monsterObject.GetComponent<MonsterController>().hitPlayer.transform.position.x)
         {
             direction = Direction.LEFT;
         }
@@ -91,6 +128,70 @@ public abstract class Monster
             direction = Direction.RIGHT;
         }
     }
+
+    public void EnemyDealDamage(float attackDamage)
+    {
+        InitPlayer.player.TakeHit(attackDamage);
+        Debug.Log(Character.currentHealth);
+    }
+    private void CooldownAttack()
+    {
+        if(timeCooldown > 0)
+        {
+            timeCooldown -= Time.deltaTime;
+        }
+        else
+        {
+            canAttack = true;
+            timeCooldown = 3f;
+        }
+    }
+    public void TakeHit(float attackDamage)
+    {
+        if(!Death)
+        {
+            currentHealth -= attackDamage;
+            Debug.Log(currentHealth);
+            PushBack();
+            animator.SetTrigger("TakeHit");
+            if (currentHealth <= 0)
+                Die();
+        }
+    }
+    public void Die()
+    {
+        Debug.Log("Enemy died");
+        collider2D.enabled = false;
+        body.bodyType = RigidbodyType2D.Static;
+        Death = true;
+        animator.SetBool("Death", Death);
+    }
+    public void PushBack()
+    {
+        switch (direction)
+        {
+            case Direction.LEFT:
+                body.velocity = new Vector2(body.velocity.x + pushBack.x, body.velocity.y + pushBack.y);
+                break;
+            case Direction.RIGHT:
+                body.velocity = new Vector2(body.velocity.x - pushBack.x, body.velocity.y + pushBack.y);
+                break;
+        }
+    }
+    public void EnemyAttackPush()
+    {
+        switch (direction)
+        {
+            case Direction.LEFT:
+                body.velocity = new Vector2(body.velocity.x - 0.01f, body.velocity.y);
+                break;
+            case Direction.RIGHT:
+                body.velocity = new Vector2(body.velocity.x + 0.01f, body.velocity.y);
+                break;
+        }
+    }
+
+
     protected void SetStateAnimator(int stateAnimator)
     {
         animator.SetInteger("State", stateAnimator);

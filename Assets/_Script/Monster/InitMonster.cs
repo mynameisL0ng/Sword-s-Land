@@ -4,42 +4,40 @@ using UnityEngine;
 
 public class InitMonster : MonoBehaviour
 {
-    public static Monster monster;
-    public static RaycastHit2D hitPlayer;
-    [SerializeField] private Vector2 dectectedSize;
-    [SerializeField] private float dectectedDistance;
-    [SerializeField] private LayerMask playerLayer;
-    void Start()
+    public enum MonsterType { Goblin, Skeleton, Mushroom, FlyingEye}
+    public MonsterType monsterType;
+    public Monster monster;
+    [SerializeField] private GameObject monsterPrefabs;
+    void Awake()
     {
-        GameObject monsterObject = gameObject;
-        switch (name)
+        GameObject monsterObject;
+        switch (monsterType)
         {
-            case "Goblin":
+            case MonsterType.Goblin:
+                monsterObject = Instantiate(monsterPrefabs, transform.position, Quaternion.identity);
+                monsterObject.transform.parent = this.transform;
+                monsterObject.name = MonsterType.Goblin.ToString();
                 monster = new Goblin(monsterObject);
                 break;
-            case "Skeleton":
+            case MonsterType.Skeleton:
+                monsterObject = Instantiate(monsterPrefabs, transform.position, Quaternion.identity);
+                monsterObject.transform.parent = this.transform;
+                monsterObject.name = MonsterType.Skeleton.ToString();
                 monster = new Skeleton(monsterObject);
                 break;
-            case "Mushroom":
+            case MonsterType.Mushroom:
+                monsterObject = Instantiate(monsterPrefabs, transform.position, Quaternion.identity);
+                monsterObject.transform.parent = this.transform;
+                monsterObject.name = MonsterType.Mushroom.ToString();
                 monster = new Mushroom(monsterObject);
                 break;
-            case "Flying Eye":
+            case MonsterType.FlyingEye:
+                monsterObject = Instantiate(monsterPrefabs, transform.position, Quaternion.identity);
+                monsterObject.transform.parent = this.transform;
+                monsterObject.name = MonsterType.FlyingEye.ToString();
                 monster = new FlyingEye(monsterObject);
                 break;
         }
     }
-    private void Update()
-    {
-        DectectedPlayer();
-        monster.Update();
-    }
-    private void DectectedPlayer()
-    {
-        hitPlayer = Physics2D.BoxCast(transform.position, dectectedSize, 0, -transform.up, dectectedDistance, playerLayer);
-    }
-    /*private void OnDrawGizmos() draw detect zone of enemy
-    {
-        Gizmos.DrawWireCube(transform.position - transform.up * dectectedDistance, dectectedSize);
-    }*/
 
 }

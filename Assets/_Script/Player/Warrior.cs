@@ -2,26 +2,29 @@
 
 public class Warrior : Character
 {
-    private float holdTime;
-    private float requireHoldTime = 2.5f;
-    private int heavyAttack;
+    public static float holdTime;
+    public static float requireHoldTime = 2.5f;
+    public static float heavyAttack;
+    /*private float cooldownTimeHeavy = 10f;*/
     public Warrior(GameObject gameObject) : base(gameObject)
     {
         healthPoint = 100;
+        currentHealth = healthPoint;
         magicPoint = 20;
-        attack = 25;
+        attackDamage = 25;
         speed = 6;
         type = CharacterType.WARRIOR;
         direction = Direction.RIGHT;
     }
-    public override void PlayerSkillDefault()
+    public override void PlayerSkillDefault() // Skill: Heavy Attack
     {
-        if (Input.GetMouseButton(1) && horizontalInPut == 0 && !isAttacking)
+        if (Input.GetButton("HeavyAttack") && horizontalInPut == 0 && !isAttacking)
         {
             isHoldRightMouse = Input.GetMouseButton(1);
-            holdTime += Time.deltaTime;
-            animator.SetBool("HoldHeavy", Input.GetMouseButton(1));
-            HeavyAttack();
+            /*holdTime += Time.deltaTime;*/
+            animator.SetBool("HoldHeavy", Input.GetButton("HeavyAttack"));
+            if(holdTime >= requireHoldTime)
+                HeavyAttackAnimation();
         }
         else
         {
@@ -30,14 +33,15 @@ public class Warrior : Character
             holdTime = 0;
         }
     }
-    private void HeavyAttack()
+    private void HeavyAttackAnimation()
     {
-        Debug.Log("Heavy Attack is ready");
-        if (holdTime >= requireHoldTime)
-        {
-            animator.SetFloat("HoldHeavyTime", holdTime);
-            heavyAttack = attack * 4;
-            holdTime = 0;
-        }
+        /*body.velocity = new Vector2(body.velocity.x + 5, body.velocity.y);*/
+        /*animator.SetFloat("HoldHeavyTime", holdTime);*/
+        animator.SetTrigger("HeavyAttack");
+    }
+    public float HeavyAttackDamage()
+    {
+        holdTime = 0;
+        return attackDamage * 3.5f;
     }
 }

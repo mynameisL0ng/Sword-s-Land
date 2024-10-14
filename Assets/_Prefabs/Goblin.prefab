@@ -1,5 +1,105 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3204728383762470948
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 86609205509697707}
+  - component: {fileID: 8604702515261225640}
+  m_Layer: 0
+  m_Name: Attack1_trigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &86609205509697707
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3204728383762470948}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7151076337672073748}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!60 &8604702515261225640
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3204728383762470948}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 1.8183529, y: -0.51939046}
+      - {x: 1.5520635, y: -0.6785256}
+      - {x: 1.1240566, y: -0.6446984}
+      - {x: 0.52551746, y: -0.5354281}
+      - {x: 0.092196465, y: -0.3124647}
+      - {x: -0.4301381, y: -0.1694377}
+      - {x: -0.9349934, y: 0.093111396}
+      - {x: -1.2642474, y: 0.404396}
+      - {x: -1.4856617, y: 0.9199283}
+      - {x: -1.9860759, y: 0.954224}
+      - {x: -2.2080812, y: 0.7118457}
+      - {x: -2.127299, y: 0.41417968}
+      - {x: -1.7219049, y: 0.0682167}
+      - {x: -1.2129134, y: -0.25270465}
+      - {x: -0.7165612, y: -0.5210289}
+      - {x: -0.33239073, y: -0.76869154}
+      - {x: 0.28747058, y: -0.9763836}
+      - {x: 0.97759783, y: -1.1450623}
+      - {x: 1.7228241, y: -1.1634611}
+      - {x: 2.1750677, y: -0.99233484}
+      - {x: 2.1529531, y: -0.6166402}
+      - {x: 1.8748312, y: -0.32179004}
+      - {x: 1.7306817, y: -0.2958644}
+  m_UseDelaunayMesh: 0
 --- !u!1 &7522264877002533501
 GameObject:
   m_ObjectHideFlags: 0
@@ -13,7 +113,7 @@ GameObject:
   - component: {fileID: 6639798317280518497}
   - component: {fileID: 7627958354903283405}
   - component: {fileID: 9170380888765889716}
-  - component: {fileID: 6312917923711349895}
+  - component: {fileID: 4568260864259592689}
   m_Layer: 6
   m_Name: Goblin
   m_TagString: Enemy
@@ -33,7 +133,8 @@ Transform:
   m_LocalPosition: {x: 2.4, y: 0.25, z: -0.04247056}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 86609205509697707}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5740676177103044827
@@ -181,7 +282,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6312917923711349895
+--- !u!114 &4568260864259592689
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -190,6 +291,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7522264877002533501}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 996cd3534b91da74ea72ae2df340bef6, type: 3}
+  m_Script: {fileID: 11500000, guid: 227b4ba13cb5147439846d231ab1193f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initMonster: {fileID: 0}
+  dectectedSize: {x: 11, y: 2}
+  dectectedDistance: 0.4
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128

@@ -3,9 +3,10 @@ using UnityEngine;
 
 public abstract class Character
 {
-    protected int healthPoint { get; set; }
+    protected float healthPoint { get; set; }
+    public static float currentHealth { get; set; }
     protected int magicPoint { get; set; }
-    protected int attack { get; set; }
+    public float attackDamage { get; set; }
     protected float attackPush { get; set; }
     protected float speed { get; set; }
     protected float jumpPower { get; set; }
@@ -17,14 +18,14 @@ public abstract class Character
     
     public static float horizontalInPut;
     public static bool isAttacking;
-    protected bool isHoldRightMouse = false;
+    public static bool isHoldRightMouse = false;
     protected Rigidbody2D body { get; set; }
     protected Animator animator { get; set; }
     protected BoxCollider2D collider2D { get; set; }
     protected Transform transform { get; set; }
     public Character(GameObject gameObject)
     {
-        attackPush = 1.5f;
+        attackPush = 2f;
         jumpPower = 5f;
         body = gameObject.GetComponent<Rigidbody2D>();
         body.gravityScale = 1.496f;
@@ -85,14 +86,15 @@ public abstract class Character
                 break;
         }
     }
-    public void PlayerDealDamage()
+    public void TakeHit(float attackDamage)
     {
-        InitMonster.monster.healthPoint -= attack;
-        Debug.Log(InitMonster.monster.healthPoint);
+        currentHealth -= attackDamage;
+        if(!isHoldRightMouse && !isAttacking)
+            animator.SetTrigger("TakeHit");
     }
     public void PlayerJump()
     {
-        if(Input.GetButtonDown("Jump") && PlayerController.grounded && !isAttacking)
+        if(Input.GetButtonDown("Jump") && PlayerController.grounded && !isAttacking && !Input.GetButton("HeavyAttack"))
         {
             body.velocity = new Vector2(body.velocity.x,jumpPower);
         }

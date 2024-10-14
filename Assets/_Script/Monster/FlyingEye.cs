@@ -5,12 +5,10 @@ public class FlyingEye : Monster
     public FlyingEye(GameObject gameObject) : base(gameObject)
     {
         healthPoint = 70;
-        attack = 20;
-        speed = 2.5f;
+        currentHealth = healthPoint;
+        attackDamage = 20;
+        speed = .7f;
         direction = Direction.LEFT;
-    }
-    public override void MonsterMovement()
-    {
-
+        Debug.Log(currentHealth);
     }
 }

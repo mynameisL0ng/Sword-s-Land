@@ -5,12 +5,9 @@ public class Mushroom : Monster
     public Mushroom(GameObject gameObject) : base(gameObject)
     {
         healthPoint = 110;
-        attack = 13;
-        speed = 1.8f;
+        currentHealth = healthPoint;
+        attackDamage = 13;
+        speed = .6f;
         direction = Direction.LEFT;
-    }
-    public override void MonsterMovement()
-    {
-
     }
 }

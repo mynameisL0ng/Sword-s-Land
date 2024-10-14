@@ -5,6 +5,8 @@ using UnityEngine;
 public class InitPlayer : MonoBehaviour
 {
     public static Character player;
+    public static bool isWarrior;
+    public static bool isKnight;
     void Start()
     {
         GameObject selectedCharacter = CharacterSelect.selectedCharacter;
@@ -15,10 +17,12 @@ public class InitPlayer : MonoBehaviour
         {
             case "Knight":
                 player = new Knight(playerObject);
+                isKnight = true;
                 break;
             case "Warrior":
                 player = new Warrior(playerObject);
-                break ;
+                isWarrior = true;
+                break;
         }
     }
 
