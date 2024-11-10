@@ -32,8 +32,8 @@ public class MonsterController : MonoBehaviour
             monster.Update();
             if (monster.Death)
             {
-                Debug.Log("Death");
                 this.enabled = false;
+                Destroy(gameObject, 3);
             }
         }
     }

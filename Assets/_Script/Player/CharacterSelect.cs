@@ -39,7 +39,7 @@ public class CharacterSelect : MonoBehaviour
     }
     public void OnCreateBtnClick()
     {
-        SceneManager.LoadScene("Tutorial");
+        SceneManager.LoadScene(1);
     }
     private void SelectCharacter()
     {

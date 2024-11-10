@@ -7,7 +7,8 @@ public class InitPlayer : MonoBehaviour
     public static Character player;
     public static bool isWarrior;
     public static bool isKnight;
-    void Start()
+    [SerializeField] private GameObject playerHealthBar;
+    void Awake()
     {
         GameObject selectedCharacter = CharacterSelect.selectedCharacter;
         GameObject playerObject = Instantiate(selectedCharacter, transform.position, Quaternion.identity);

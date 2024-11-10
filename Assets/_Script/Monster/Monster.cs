@@ -15,7 +15,6 @@ public abstract class Monster
     protected Direction direction { get; set; }
     protected StateAnimator stateAnimator { get; set; }
     protected GameObject monsterObject { get; set; }
-
     protected Vector2 oldPosition { get; set; }
     protected Vector2 pushBack { get; set; }
     protected Rigidbody2D body { get; set; }
@@ -25,8 +24,8 @@ public abstract class Monster
     protected Monster(GameObject gameObject)
     {
         monsterObject = gameObject;
-        timeCooldown = 3f;
         canAttack = true;
+        timeCooldown = 1.5f;
         pushBack = new Vector2(1.5f, 1.5f);
         body = gameObject.GetComponent<Rigidbody2D>();
         body.gravityScale = 1.496f;
@@ -52,9 +51,12 @@ public abstract class Monster
                 {
                     MonsterFlipToPlayer();
                     MonsterMovement();
-                    CooldownAttack();
+                    if(!canAttack)
+                    {
+                        CooldownAttack();
+                    }
                 }
-                else if (Vector2.Distance(transform.position, monsterObject.GetComponent<MonsterController>().hitPlayer.collider.transform.position) <= 2 && canAttack && timeCooldown <= 0)
+                else if (Vector2.Distance(transform.position, monsterObject.GetComponent<MonsterController>().hitPlayer.collider.transform.position) <= 2 && canAttack)
                 {
                     MonsterAttackAnimation();
                     CooldownAttack();
@@ -69,13 +71,14 @@ public abstract class Monster
             }
             else
             {
+                canAttack = true;
                 MonsterFlipToOldPos();
                 if (Vector2.Distance(transform.position, oldPosition) < .5f)
                 {
                     stateAnimator = StateAnimator.IDLE;
                     SetStateAnimator((int)stateAnimator);
                 }
-                transform.position = Vector2.MoveTowards(transform.position, oldPosition, 2 * Time.deltaTime);
+                transform.position = Vector2.Lerp(transform.position, oldPosition, speed * Time.deltaTime);
             }
         }
     }
@@ -119,7 +122,7 @@ public abstract class Monster
     }
     private void MonsterFlipToOldPos()
     {
-        if (transform.position.x > oldPosition.x)
+        if (transform.position.x >= oldPosition.x)
         {
             direction = Direction.LEFT;
         }
@@ -132,7 +135,6 @@ public abstract class Monster
     public void EnemyDealDamage(float attackDamage)
     {
         InitPlayer.player.TakeHit(attackDamage);
-        Debug.Log(Character.currentHealth);
     }
     private void CooldownAttack()
     {
@@ -143,7 +145,7 @@ public abstract class Monster
         else
         {
             canAttack = true;
-            timeCooldown = 3f;
+            timeCooldown = 1.5f;
         }
     }
     public void TakeHit(float attackDamage)
@@ -151,7 +153,6 @@ public abstract class Monster
         if(!Death)
         {
             currentHealth -= attackDamage;
-            Debug.Log(currentHealth);
             PushBack();
             animator.SetTrigger("TakeHit");
             if (currentHealth <= 0)
@@ -160,7 +161,6 @@ public abstract class Monster
     }
     public void Die()
     {
-        Debug.Log("Enemy died");
         collider2D.enabled = false;
         body.bodyType = RigidbodyType2D.Static;
         Death = true;

@@ -4,9 +4,9 @@ public class Mushroom : Monster
 {
     public Mushroom(GameObject gameObject) : base(gameObject)
     {
-        healthPoint = 110;
+        healthPoint = 75;
         currentHealth = healthPoint;
-        attackDamage = 13;
+        attackDamage = 5;
         speed = .6f;
         direction = Direction.LEFT;
     }

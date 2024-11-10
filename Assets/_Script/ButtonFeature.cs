@@ -7,36 +7,19 @@ public class ButtonFeature : MonoBehaviour
     [SerializeField] GameObject characterSelectScreen;
     [SerializeField] GameObject mainScreen;
     [SerializeField] GameObject settingScreen;
-    [SerializeField] GameObject escScreen;
-    bool escScreenActive = false;
+    bool escSettingActive = false;
     private void Start()
     {
         characterSelectScreen.SetActive(false);
         mainScreen.SetActive(true);
         settingScreen.SetActive(false);
-        escScreen.SetActive(escScreenActive);
 
     }
     private void Update()
     {
-        EscScreenActive();
+        EscSettingKey();
     }
-    private void EscScreenActive()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if(escScreenActive == false)
-            {
-                escScreenActive = true;
-                escScreen.SetActive(escScreenActive);
-            }
-            else
-            {
-                escScreenActive = false;
-                escScreen.SetActive(escScreenActive);
-            }
-        }
-    }
+
     public void OnPlayBtn()
     {
         characterSelectScreen.SetActive(true);
@@ -44,8 +27,18 @@ public class ButtonFeature : MonoBehaviour
     }
     public void OnSettingBtn()
     {
+        escSettingActive = true;
         mainScreen.SetActive(false);
         settingScreen.SetActive(true);
+    }
+    public void EscSettingKey()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+                escSettingActive = !escSettingActive;
+                mainScreen.SetActive(!escSettingActive);
+                settingScreen.SetActive(escSettingActive);
+        }
     }
     public void OnExitSettingScreenBtn()
     {

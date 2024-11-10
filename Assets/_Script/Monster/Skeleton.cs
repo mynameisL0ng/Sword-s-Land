@@ -4,9 +4,9 @@ public class Skeleton : Monster
 {
     public Skeleton(GameObject gameObject) : base(gameObject)
     {
-        healthPoint = 130;
+        healthPoint = 100;
         currentHealth = healthPoint;
-        attackDamage = 12;
+        attackDamage = 10;
         speed = .6f;
         direction = Direction.LEFT;
     }

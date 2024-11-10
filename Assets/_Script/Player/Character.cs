@@ -3,30 +3,33 @@ using UnityEngine;
 
 public abstract class Character
 {
-    protected float healthPoint { get; set; }
-    public static float currentHealth { get; set; }
+    public float healthPoint { get; set; }
+    public  float currentHealth { get; set; }
     protected int magicPoint { get; set; }
     public float attackDamage { get; set; }
     protected float attackPush { get; set; }
-    protected float speed { get; set; }
+    public float speed { get; set; }
     protected float jumpPower { get; set; }
-    protected enum Direction { LEFT, RIGHT}
+    public enum Direction { LEFT, RIGHT}
     protected enum CharacterType { KNIGHT, WARRIOR}
     public enum AnimatorState { IDLE, RUN, JUMP, FALL}
-    protected Direction direction { get; set; }
+    public Direction direction { get; set; }
     protected CharacterType type { get; set; }
     
-    public static float horizontalInPut;
-    public static bool isAttacking;
-    public static bool isHoldRightMouse = false;
+    public float horizontalInPut;
+    public bool isAttacking;
+    public bool isHoldRightMouse = false;
+    public bool isDie = false;
     protected Rigidbody2D body { get; set; }
     protected Animator animator { get; set; }
     protected BoxCollider2D collider2D { get; set; }
     protected Transform transform { get; set; }
+    protected GameObject playerObject { get; set; }
     public Character(GameObject gameObject)
     {
+        playerObject = gameObject;
         attackPush = 2f;
-        jumpPower = 5f;
+        jumpPower = 6f;
         body = gameObject.GetComponent<Rigidbody2D>();
         body.gravityScale = 1.496f;
         animator = gameObject.GetComponent<Animator>();
@@ -91,6 +94,18 @@ public abstract class Character
         currentHealth -= attackDamage;
         if(!isHoldRightMouse && !isAttacking)
             animator.SetTrigger("TakeHit");
+        if (currentHealth <= 0f)
+        {
+            Die();
+        }
+    }
+    private void Die()
+    {
+        isDie = true;
+        animator.SetTrigger("Dead");
+        playerObject.GetComponent<PlayerController>().enabled = false;
+        collider2D.enabled = false;
+        body.bodyType = RigidbodyType2D.Static;
     }
     public void PlayerJump()
     {
