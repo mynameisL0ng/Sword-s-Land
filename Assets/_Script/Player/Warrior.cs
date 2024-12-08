@@ -3,14 +3,14 @@
 public class Warrior : Character
 {
     public static float holdTime;
-    public static float requireHoldTime = 2.5f;
-    public static float heavyAttack;
+    public static float requireHoldTime = 2f;
     /*private float cooldownTimeHeavy = 10f;*/
     public Warrior(GameObject gameObject) : base(gameObject)
     {
         healthPoint = 100;
         currentHealth = healthPoint;
-        magicPoint = 20;
+        staminaPoint = 50;
+        currentStamina = staminaPoint;
         attackDamage = 25;
         speed = 6;
         type = CharacterType.WARRIOR;
@@ -35,13 +35,19 @@ public class Warrior : Character
     }
     private void HeavyAttackAnimation()
     {
-        /*body.velocity = new Vector2(body.velocity.x + 5, body.velocity.y);*/
-        /*animator.SetFloat("HoldHeavyTime", holdTime);*/
         animator.SetTrigger("HeavyAttack");
     }
-    public float HeavyAttackDamage()
+    private void HeavyAttackForce()
     {
-        holdTime = 0;
-        return attackDamage * 3.5f;
+        switch (direction)
+        {
+            case Direction.LEFT:
+                body.velocity = new Vector2(-3f, body.velocity.y);
+                break;
+            case Direction.RIGHT:
+                body.velocity = new Vector2(+3f, body.velocity.y);
+                break;
+        }
     }
+
 }

@@ -200,6 +200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lastPosition: {x: 0, y: 0, z: 0}
+  nerfDamagePercent: 0.1
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -210,6 +211,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e1b9fabec3d4222488fd5e8d0bf8638c, type: 3}
   - {fileID: 8300000, guid: 82e7be51461cc48428ba5f40ff2f4a15, type: 3}
   - {fileID: 8300000, guid: 7b1d31d3568337145b618de971e5bbf1, type: 3}
+  - {fileID: 8300000, guid: de276b6a47e9507488aedbff37e6736c, type: 3}
+  audioSkillDefautl: {fileID: 8300000, guid: e3dbefab959e2cd428b2f3d26f6dff3b, type: 3}
+  damagePopUp: {fileID: 3247558637829171650, guid: c46baea3fa2b0cc40b2ea60228c01d08, type: 3}
+  effectLvlUp: {fileID: 3388580236344961314, guid: c845208ea6273b54cb9a09edceaacfd0, type: 3}
+  nameState: 
 --- !u!82 &2627915209405544132
 AudioSource:
   m_ObjectHideFlags: 0
@@ -222,7 +228,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0

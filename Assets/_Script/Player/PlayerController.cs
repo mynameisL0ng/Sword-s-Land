@@ -1,20 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using TMPro;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IDataPersistence
 {
     public Character player;
     public Vector3 lastPosition;
+    public float nerfDamagePercent; // will attack player can deal on enemy
+
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Vector2 groundCheckSize;
     [SerializeField] private float castDistance;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip[] audioClips;
+
+
+    public AudioClip audioSkillDefautl;
     public static bool grounded;
     public GameObject damagePopUp;
-    enum VFX_State {RUN , JUMP, JUMPLAND};
+    public GameObject effectLvlUp;
+
+    enum VFX_State {RUN , JUMP, JUMPLAND, TAKEHIT};
     VFX_State nameVFX;
+    public string nameState;
+
     private Rigidbody2D body;
     private Animator animator;
     private string previousState;
@@ -53,24 +64,33 @@ public class PlayerController : MonoBehaviour, IDataPersistence
 
     private void OnTriggerEnter2D(Collider2D other) // player need attack push can deal damage.
     {
+        float damageRange = Random.Range(player.attackDamage - (player.attackDamage * nerfDamagePercent), player.attackDamage);
         if(other.gameObject.CompareTag("Enemy"))
         {
             Monster monster = other.GetComponent<MonsterController>().initMonster.monster;
-            Debug.Log(other.transform.localPosition);
-            GameObject newDamagePopUp =  Instantiate(damagePopUp, other.transform.localPosition, Quaternion.identity);
-            newDamagePopUp.transform.position = new Vector2(other.transform.localPosition.x, other.transform.localPosition.y + 1f);
-            Debug.Log(newDamagePopUp.transform.position);
-            if(monster != null)
+            if (monster != null)
             {
                 if (isHeavyAttack)
                 {
                     monster.TakeHit(player.attackDamage * 3.5f);
+                    damagePopUp.GetComponent<TextMeshPro>().text = (player.attackDamage * 3.5).ToString();
                     isHeavyAttack = false;
                 }
                 else
-                    monster.TakeHit(player.attackDamage);
+                {
+                    monster.TakeHit(damageRange);
+                    damagePopUp.GetComponent<TextMeshPro>().text = ((int)damageRange).ToString();
+                }
+                Damage_PopUp(other.transform.position);
             }
         }
+    }
+    void Damage_PopUp(Vector2 EnemyPosition)
+    {
+        Vector2 popupPosition = EnemyPosition;
+        popupPosition.x = Random.Range(EnemyPosition.x - 1.5f, EnemyPosition.x + 1.5f);
+        popupPosition.y = Random.Range(EnemyPosition.y - 1.5f, EnemyPosition.y + 1.5f);
+        Instantiate(damagePopUp, popupPosition, Quaternion.identity);
     }
     private void IsHeavyAttack()
     {
@@ -86,13 +106,18 @@ public class PlayerController : MonoBehaviour, IDataPersistence
             }
         }
     }
+
+    public void IsNotHeavyAttack()
+    {
+        isHeavyAttack = false;
+    }
+
     private void PlayerPushAttackForce()
     {
         player.PlayerAttackPush();
     }
     private void Player_VFX()
     {
-        string nameState;
         if ((player.horizontalInPut > .5f || player.horizontalInPut < -.5f) && animator.GetCurrentAnimatorStateInfo(0).IsName("Run"))
         {
             nameState = VFX_State.RUN.ToString();
@@ -101,13 +126,17 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         {
             nameState = VFX_State.JUMP.ToString();
         }
-        else if(grounded && body.velocity.y < -.01f)
+        else if(grounded && player.horizontalInPut == 0)
         {
             nameState = VFX_State.JUMPLAND.ToString();
         }
         else
         {
             nameState = "";
+        }
+        if(animator.GetCurrentAnimatorStateInfo(0).IsName("TakeHit"))
+        {
+            nameState = VFX_State.TAKEHIT.ToString();
         }
         if (nameState != previousState)
         {
@@ -145,6 +174,19 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     {
         player.isAttacking = false;
     }
+
+    public void AudioSkillDefault() // warrior skill default audio
+    {
+        audioSource.enabled = true;
+        audioSource.loop = false;
+        audioSource.clip = audioSkillDefautl;
+        audioSource.Play();
+    }
+    public void EffectLevelUp()
+    {
+        Instantiate(effectLvlUp, transform.position, Quaternion.identity);
+    }
+
     public void LoadData(GameData data)
     {
         this.transform.position = data.playerPosition;

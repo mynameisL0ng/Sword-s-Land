@@ -39,7 +39,8 @@ public class CharacterSelect : MonoBehaviour
     }
     public void OnCreateBtnClick()
     {
-        SceneManager.LoadScene(1);
+        ApplicationVariables.LoadingSceneName = "GamePlay";
+        SceneManager.LoadScene("LoadingScene");
     }
     private void SelectCharacter()
     {

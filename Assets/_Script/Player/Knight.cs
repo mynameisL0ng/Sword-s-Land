@@ -8,7 +8,8 @@ public class Knight : Character
         isShield = false;
         healthPoint = 120;
         currentHealth = healthPoint;
-        magicPoint = 30;
+        staminaPoint = 30;
+        currentStamina = staminaPoint;
         attackDamage = 20;
         speed = 4;
         type = CharacterType.KNIGHT;

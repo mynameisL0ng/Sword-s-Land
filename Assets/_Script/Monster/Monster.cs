@@ -6,6 +6,7 @@ public abstract class Monster
     public float healthPoint {  get; set; }
     public float currentHealth { get; set; }
     public float attackDamage { get; set; }
+    public float expDrop { get; set; }
     protected float speed { get; set; }
     private bool canAttack { get; set; }
     public bool Death { get; set; }
@@ -23,6 +24,7 @@ public abstract class Monster
     protected Transform transform { get; set; }
     protected Monster(GameObject gameObject)
     {
+        expDrop = 200;
         monsterObject = gameObject;
         canAttack = true;
         timeCooldown = 1.5f;
@@ -41,11 +43,11 @@ public abstract class Monster
         FlipSprite();
     }
 
-    private void MonsterAction()
+    private void MonsterAction() // Actions: Move to target, Return spawn point, attack
     {
         if(!Death)
         {
-            if (monsterObject.GetComponent<MonsterController>().hitPlayer.collider != null)
+            if (monsterObject.GetComponent<MonsterController>().hitPlayer.collider != null) // detect player
             {
                 if (Vector2.Distance(transform.position, monsterObject.GetComponent<MonsterController>().hitPlayer.collider.transform.position) > 2)
                 {
@@ -69,7 +71,7 @@ public abstract class Monster
                     SetStateAnimator((int)stateAnimator);
                 }
             }
-            else
+            else // return spawn point
             {
                 canAttack = true;
                 MonsterFlipToOldPos();
@@ -77,6 +79,7 @@ public abstract class Monster
                 {
                     stateAnimator = StateAnimator.IDLE;
                     SetStateAnimator((int)stateAnimator);
+                    Regeneration();
                 }
                 transform.position = Vector2.Lerp(transform.position, oldPosition, speed * Time.deltaTime);
             }
@@ -159,12 +162,25 @@ public abstract class Monster
                 Die();
         }
     }
+    void Regeneration()
+    {
+        if(currentHealth < healthPoint)
+        {
+            currentHealth += 0.02f;
+        }
+        else
+        {
+            currentHealth = healthPoint;
+        }
+    }
     public void Die()
     {
+        InitPlayer.player.currentEXP += expDrop;
         collider2D.enabled = false;
         body.bodyType = RigidbodyType2D.Static;
         Death = true;
         animator.SetBool("Death", Death);
+        
     }
     public void PushBack()
     {

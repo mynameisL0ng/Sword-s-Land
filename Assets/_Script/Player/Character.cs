@@ -1,20 +1,31 @@
-﻿using Unity.VisualScripting;
+﻿using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class Character
 {
     public float healthPoint { get; set; }
     public  float currentHealth { get; set; }
-    protected int magicPoint { get; set; }
+
+    public float staminaPoint { get; set; }
+    public float currentStamina { get; set; }
+    private float timeRequireRegen { get; set; }
+    public float staminaRegeneration { get; set; }
+
     public float attackDamage { get; set; }
+    public int levelPoint { get; set; }
+    public float skillPoint { get; set; }
+    public float currentEXP { get; set; }
+    public float expRequire { get; set; }
     protected float attackPush { get; set; }
     public float speed { get; set; }
     protected float jumpPower { get; set; }
+
     public enum Direction { LEFT, RIGHT}
-    protected enum CharacterType { KNIGHT, WARRIOR}
+    public enum CharacterType { KNIGHT, WARRIOR}
     public enum AnimatorState { IDLE, RUN, JUMP, FALL}
     public Direction direction { get; set; }
-    protected CharacterType type { get; set; }
+    public CharacterType type { get; set; }
     
     public float horizontalInPut;
     public bool isAttacking;
@@ -28,14 +39,20 @@ public abstract class Character
     public Character(GameObject gameObject)
     {
         playerObject = gameObject;
+        levelPoint = 0;
+        skillPoint = 0;
         attackPush = 2f;
         jumpPower = 6f;
+        currentEXP = 0;
+        expRequire = 100;
         body = gameObject.GetComponent<Rigidbody2D>();
         body.gravityScale = 1.496f;
         animator = gameObject.GetComponent<Animator>();
         collider2D = gameObject.GetComponent<BoxCollider2D>();
         transform = gameObject.transform;
         isAttacking = false;
+        timeRequireRegen = 3f;
+        staminaRegeneration = 0.02f;
     }
 
     internal void Update()
@@ -46,6 +63,7 @@ public abstract class Character
         FlipSprite();
         UpdateStateAnimator();
         PlayerSkillDefault();
+        LevelUp();
     }
 
     private void InputHandle()
@@ -68,13 +86,60 @@ public abstract class Character
     
     private void PlayerAttack()
     {
-        if(Input.GetButtonDown("Attack") && PlayerController.grounded)
+        if(currentStamina >= 10 && !isAttacking)
         {
-            horizontalInPut = 0f;
-            isAttacking = true;
-            animator.SetTrigger("Attack");
+            if (Input.GetButtonDown("Attack") && PlayerController.grounded && !UI_Manager.modeUI)
+            {
+                isAttacking = true;
+                currentStamina -= 10;
+                horizontalInPut = 0f;
+                animator.SetTrigger("Attack");
+            }
+        }
+        if(currentStamina < staminaPoint)
+        {
+            StaminaRegen();
         }
     }
+    private void StaminaRegen() // Regen stamina if time require <= 0
+    {
+        TimeRequireRegen();
+        if (!isAttacking && timeRequireRegen <= 0)
+        {
+            currentStamina += staminaRegeneration;
+            if (currentStamina >= staminaPoint)
+            {
+                currentStamina = staminaPoint;
+                timeRequireRegen = 3;
+            }
+        }
+    }
+    private void TimeRequireRegen() // check TimeRequire 
+    {
+        if (isAttacking)
+        {
+            timeRequireRegen = 3f;
+        }
+        else
+        {
+            if(timeRequireRegen > 0)
+                timeRequireRegen -= Time.deltaTime;
+        }
+    }
+
+
+    public void LevelUp()
+    {
+        if(currentEXP >= expRequire)
+        {
+            levelPoint += 1;
+            playerObject.GetComponent<PlayerController>().EffectLevelUp();
+            skillPoint += 1;
+            expRequire *= 2;
+            currentEXP = 0;
+        }
+    }
+
     public abstract void PlayerSkillDefault();
     
     public void PlayerAttackPush()
