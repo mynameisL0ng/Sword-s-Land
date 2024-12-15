@@ -7,13 +7,31 @@ public class InitPlayer : MonoBehaviour
     public static Character player;
     public static bool isWarrior;
     public static bool isKnight;
-    [SerializeField] private GameObject playerHealthBar;
+    GameObject playerObject;
+    GameObject selectedCharacter;
+    PlayerController[] playerController;
     void Awake()
     {
-        GameObject selectedCharacter = CharacterSelect.selectedCharacter;
-        GameObject playerObject = Instantiate(selectedCharacter, transform.position, Quaternion.identity);
-        playerObject.name = "Player";
-
+        LoadPlayerPos();
+        playerController = FindObjectsOfType<PlayerController>();
+        if (playerController.Length == 0)
+        {
+            selectedCharacter = CharacterSelect.selectedCharacter;
+            playerObject = Instantiate(selectedCharacter, transform.position, Quaternion.identity);
+            playerObject.name = "Player";
+        }
+        if (FindObjectsOfType<InitPlayer>().Length > 1)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        DontDestroyOnLoad(gameObject);
+        if (playerController.Length > 1)
+        {
+            Destroy(playerController[0].gameObject);
+            return;
+        }
+        DontDestroyOnLoad(playerObject);
         switch (selectedCharacter.name)
         {
             case "Knight":
@@ -26,5 +44,15 @@ public class InitPlayer : MonoBehaviour
                 break;
         }
     }
-
+    void LoadPlayerPos()
+    {
+        if(PlayerPrefs.HasKey("X") && PlayerPrefs.HasKey("Y") && PlayerPrefs.HasKey("Z"))
+        {
+            float x = PlayerPrefs.GetFloat("X");
+            float y = PlayerPrefs.GetFloat("Y");
+            float z = PlayerPrefs.GetFloat("Z");
+            gameObject.transform.position = new Vector3(x, y, z);
+            Debug.Log("Load success");
+        }
+    }
 }

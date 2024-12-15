@@ -9,5 +9,6 @@ public class Mushroom : Monster
         attackDamage = 5;
         speed = .6f;
         direction = Direction.LEFT;
+        monsterType = MonsterType.MUSHROOM;
     }
 }

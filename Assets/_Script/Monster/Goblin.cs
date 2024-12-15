@@ -9,7 +9,7 @@ public class Goblin : Monster
         attackDamage = 5;
         speed = .5f;
         direction = Direction.RIGHT;
-        Debug.Log(currentHealth);
+        monsterType = MonsterType.GOBLIN;
     }
 
 }

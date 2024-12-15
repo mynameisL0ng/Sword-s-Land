@@ -11,10 +11,13 @@ public abstract class Monster
     private bool canAttack { get; set; }
     public bool Death { get; set; }
     private float timeCooldown { get; set; }
+
     protected enum Direction { LEFT, RIGHT }
     protected enum StateAnimator { IDLE , RUN }
     protected Direction direction { get; set; }
     protected StateAnimator stateAnimator { get; set; }
+    protected enum MonsterType { GOBLIN, FLYINGEYE, MUSHROOM, SKELETON }
+    protected MonsterType monsterType { get; set; }
     protected GameObject monsterObject { get; set; }
     protected Vector2 oldPosition { get; set; }
     protected Vector2 pushBack { get; set; }
@@ -181,6 +184,17 @@ public abstract class Monster
         Death = true;
         animator.SetBool("Death", Death);
         
+        // check player quest
+        if(InitPlayer.player.playerObject != null)
+        {
+            if(InitPlayer.player.playerObject.GetComponent<PlayerController>().quest.isActive)
+            {
+                if ((int)monsterType == (int)InitPlayer.player.playerObject.GetComponent<PlayerController>().quest.goal.killType)
+                {
+                    InitPlayer.player.playerObject.GetComponent<PlayerController>().quest.goal.currentAmount++;
+                }
+            }
+        }
     }
     public void PushBack()
     {
@@ -206,6 +220,7 @@ public abstract class Monster
                 break;
         }
     }
+
 
 
     protected void SetStateAnimator(int stateAnimator)

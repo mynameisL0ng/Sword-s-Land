@@ -12,7 +12,6 @@ public class DialogController : MonoBehaviour
 
     void Start()
     {
-        
         StartDialogue();
     }
 

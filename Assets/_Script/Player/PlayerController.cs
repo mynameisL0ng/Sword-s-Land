@@ -7,6 +7,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour, IDataPersistence
 {
     public Character player;
+    public Quest quest;
+
     public Vector3 lastPosition;
     public float nerfDamagePercent; // will attack player can deal on enemy
 
@@ -30,7 +32,6 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     private Animator animator;
     private string previousState;
     private bool isHeavyAttack;
-
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
@@ -122,11 +123,11 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         {
             nameState = VFX_State.RUN.ToString();
         }
-        else if(body.velocity.y > .1f && animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
+        else if (body.velocity.y > .1f && animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
         {
             nameState = VFX_State.JUMP.ToString();
         }
-        else if(grounded && player.horizontalInPut == 0)
+        else if ((grounded && player.horizontalInPut == 0)) 
         {
             nameState = VFX_State.JUMPLAND.ToString();
         }

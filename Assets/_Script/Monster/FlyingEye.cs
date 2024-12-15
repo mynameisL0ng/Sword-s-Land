@@ -9,6 +9,6 @@ public class FlyingEye : Monster
         attackDamage = 7;
         speed = .7f;
         direction = Direction.LEFT;
-        Debug.Log(currentHealth);
+        monsterType = MonsterType.FLYINGEYE;
     }
 }

@@ -31,11 +31,11 @@ public abstract class Character
     public bool isAttacking;
     public bool isHoldRightMouse = false;
     public bool isDie = false;
-    protected Rigidbody2D body { get; set; }
+    public Rigidbody2D body { get; set; }
     protected Animator animator { get; set; }
     protected BoxCollider2D collider2D { get; set; }
-    protected Transform transform { get; set; }
-    protected GameObject playerObject { get; set; }
+    public Transform transform { get; set; }
+    public GameObject playerObject { get; set; }
     public Character(GameObject gameObject)
     {
         playerObject = gameObject;
@@ -68,20 +68,25 @@ public abstract class Character
 
     private void InputHandle()
     {
-        if (!isAttacking)
+        if (!UI_Manager.modeUI)
         {
-            horizontalInPut = Input.GetAxis("Horizontal");
-            if (horizontalInPut > .015f)
+            if (!isAttacking)
             {
-                body.velocity = new Vector2(speed * horizontalInPut, body.velocity.y);
-                direction = Direction.RIGHT;
-            }
-            else if (horizontalInPut < -.015f)
-            {
-                body.velocity = new Vector2(speed * horizontalInPut, body.velocity.y);
-                direction = Direction.LEFT;
+                horizontalInPut = Input.GetAxis("Horizontal");
+                if (horizontalInPut > .015f)
+                {
+                    body.velocity = new Vector2(speed * horizontalInPut, body.velocity.y);
+                    direction = Direction.RIGHT;
+                }
+                else if (horizontalInPut < -.015f)
+                {
+                    body.velocity = new Vector2(speed * horizontalInPut, body.velocity.y);
+                    direction = Direction.LEFT;
+                }
             }
         }
+        else
+            horizontalInPut = 0f;
     }
     
     private void PlayerAttack()

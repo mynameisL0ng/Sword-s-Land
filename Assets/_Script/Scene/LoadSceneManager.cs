@@ -13,6 +13,7 @@ public class LoadSceneManager : MonoBehaviour
     }
     IEnumerator LoadAsyncScene()
     {
+
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(ApplicationVariables.LoadingSceneName);
         asyncLoad.allowSceneActivation = false;
         while (asyncLoad.progress < 0.9f)

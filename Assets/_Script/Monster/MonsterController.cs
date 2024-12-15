@@ -25,7 +25,6 @@ public class MonsterController : MonoBehaviour
         if(initMonster != null)
         {
             monster = initMonster.monster;
-            Debug.Log(monster);
         }
     }
     private void Update()
