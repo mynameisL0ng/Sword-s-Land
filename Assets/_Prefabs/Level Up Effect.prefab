@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4719763440606339156}
   - component: {fileID: 6851610798882415681}
-  - component: {fileID: 6945220271442335890}
   - component: {fileID: 6336323638653574261}
+  - component: {fileID: 6666610964279776276}
   m_Layer: 0
   m_Name: Level Up Effect
   m_TagString: Untagged
@@ -86,7 +86,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &6945220271442335890
+--- !u!114 &6336323638653574261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3388580236344961314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e5e9061d0fe9af428291c96c99306ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyDelayTime: 1.5
+--- !u!95 &6666610964279776276
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -107,16 +120,3 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6336323638653574261
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3388580236344961314}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e5e9061d0fe9af428291c96c99306ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  destroyDelayTime: 1

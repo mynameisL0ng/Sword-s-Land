@@ -319,6 +319,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac11744a099f154498b79d1bd9bba455, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  quest:
+    isActive: 0
+    title: 
+    description: 
+    experienceReward: 0
+    masteryReward: 0
+    goal:
+      requireAmount: 0
+      currentAmount: 0
+      goalType: 0
+      killType: 0
   lastPosition: {x: 0, y: 0, z: 0}
   nerfDamagePercent: 0.1
   groundLayer:
@@ -335,6 +346,7 @@ MonoBehaviour:
   audioSkillDefautl: {fileID: 8300000, guid: 98253a759c3913b43a0496c972b65d2e, type: 3}
   damagePopUp: {fileID: 3247558637829171650, guid: c46baea3fa2b0cc40b2ea60228c01d08, type: 3}
   effectLvlUp: {fileID: 3388580236344961314, guid: c845208ea6273b54cb9a09edceaacfd0, type: 3}
+  deathFadeScreen: {fileID: 3600531066806367229, guid: ca6a8a70acb999a4098865115c797e18, type: 3}
   nameState: 
 --- !u!82 &5636173279433875195
 AudioSource:

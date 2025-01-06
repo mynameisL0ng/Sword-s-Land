@@ -45,9 +45,9 @@ public class BarSystemController : MonoBehaviour
     private void UpdateFillAmount_Text(Image image, TextMeshProUGUI text , float min, float max) // Fill Amount and text UI
     {
         image.fillAmount = min / max;
-        text.text = min.ToString() + "/" + max.ToString();
+        text.text = ((int)min).ToString() + "/" + max.ToString();
     }
-    private void UpdateFillAmount(Image image, float min, float max) // Full amount only
+    private void UpdateFillAmount(Image image, float min, float max) // Fill amount only
     {
         image.fillAmount = min / max;
     }

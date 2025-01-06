@@ -10,9 +10,25 @@ public class QuestGoal
     {
         return currentAmount >= requireAmount;
     }
+
+    public void EnemyKilled()
+    {
+        if (goalType == GoalType.KILL)
+        {
+            currentAmount++;
+        }
+    }
+    public void ItemCollected()
+    {
+        if (goalType == GoalType.GATHER)
+        {
+            currentAmount++;
+        }
+    }
+
     public enum GoalType { KILL, GATHER }
     public GoalType goalType;
 
-    public enum KillType { GOBLIN, FLYINGEYE, MUSHROOM, SKELETON }
+    public enum KillType {GOBLIN, FLYINGEYE, MUSHROOM, SKELETON, MEDIEVAL_KING}
     public KillType killType;
 }

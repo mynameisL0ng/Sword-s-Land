@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 1059888436889058001}
   - component: {fileID: 5331382318198603657}
   - component: {fileID: 1387638142537172802}
-  - component: {fileID: 5591790628915843902}
   - component: {fileID: 5923076571285716945}
+  - component: {fileID: 1699907230341575965}
   m_Layer: 0
   m_Name: EXP Popup
   m_TagString: Untagged
@@ -173,27 +173,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 5331382318198603657}
   m_maskType: 0
---- !u!95 &5591790628915843902
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3463813795432918194}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a349657110579a744819f810e9a31203, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &5923076571285716945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,3 +186,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyDelayTime: 2
+--- !u!95 &1699907230341575965
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3463813795432918194}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c07a1c7849ad661478efd1a58cca3278, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

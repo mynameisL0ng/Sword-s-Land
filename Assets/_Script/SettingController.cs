@@ -10,7 +10,12 @@ public class SettingScreen : MonoBehaviour
     public float volume;
     private void Start()
     {
-        volume = 0.5f;
+        if (PlayerPrefs.HasKey("BGMusic_Volume"))
+        {
+            volume = PlayerPrefs.GetFloat("BGMusic_Volume");
+        }
+        else
+            volume = 0.5f;
         slider.value = volume;
         backgroundMusic.volume = volume;
     }

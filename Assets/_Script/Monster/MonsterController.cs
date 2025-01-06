@@ -31,7 +31,7 @@ public class MonsterController : MonoBehaviour
     {
         if (monster != null)
         {
-            DectectedPlayer();
+            DetectedPlayer();
             monster.Update();
             if (monster.Death)
             {
@@ -41,7 +41,7 @@ public class MonsterController : MonoBehaviour
             }
         }
     }
-    private void DectectedPlayer()
+    private void DetectedPlayer()
     {
         hitPlayer = Physics2D.BoxCast(transform.position, dectectedSize, 0, -transform.up, dectectedDistance, playerLayer);
     }
@@ -53,7 +53,6 @@ public class MonsterController : MonoBehaviour
     void Exp_PopUp()
     {
         Vector2 popupPosition = transform.position;
-        popupPosition.y = 3f;
         expPopUp.GetComponent<TextMeshPro>().text = monster.expDrop.ToString();
         Instantiate(expPopUp, popupPosition, Quaternion.identity);
     }

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Threading;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class PlayerController : MonoBehaviour, IDataPersistence
+public class PlayerController : MonoBehaviour
 {
     public Character player;
     public Quest quest;
@@ -23,6 +24,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     public static bool grounded;
     public GameObject damagePopUp;
     public GameObject effectLvlUp;
+    public GameObject deathFadeScreen;
 
     enum VFX_State {RUN , JUMP, JUMPLAND, TAKEHIT};
     VFX_State nameVFX;
@@ -43,12 +45,12 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         isHeavyAttack = false;
     }
 
-    void Update()
+    void Update() 
     {
         player.Update();
         Player_VFX();
     }
-    private void FixedUpdate()
+    private void FixedUpdate() // 0.02 
     {
         IsHeavyAttack();
         isGrounded();
@@ -58,10 +60,10 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         return grounded = Physics2D.BoxCast(transform.position, groundCheckSize, 0, -transform.up, castDistance, groundLayer);
     }
 
-/*    private void OnDrawGizmos() draw groundBoxCast
+    private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position - transform.up * castDistance, groundCheckSize);
-    }*/
+    }
 
     private void OnTriggerEnter2D(Collider2D other) // player need attack push can deal damage.
     {
@@ -82,16 +84,41 @@ public class PlayerController : MonoBehaviour, IDataPersistence
                     monster.TakeHit(damageRange);
                     damagePopUp.GetComponent<TextMeshPro>().text = ((int)damageRange).ToString();
                 }
-                Damage_PopUp(other.transform.position);
+                QuestTrackingProgress();
+                Instantiate(damagePopUp, new Vector2(transform.position.x, transform.position.y + 1.5f), Quaternion.identity);
+            }
+        }
+        else if(other.gameObject.CompareTag("Boss"))
+        {
+            Boss boss = other.GetComponent<BossController>().initBoss.boss;
+            if (boss != null)
+            {
+                if (isHeavyAttack)
+                {
+                    boss.TakeHit(player.attackDamage * 3.5f);
+                    damagePopUp.GetComponent<TextMeshPro>().text = (player.attackDamage * 3.5).ToString();
+                    isHeavyAttack = false;
+                }
+                else
+                {
+                    boss.TakeHit(damageRange);
+                    damagePopUp.GetComponent<TextMeshPro>().text = ((int)damageRange).ToString();
+                }
+                QuestTrackingProgress();
+                Instantiate(damagePopUp, new Vector2(transform.position.x, transform.position.y + 1.5f), Quaternion.identity);
             }
         }
     }
-    void Damage_PopUp(Vector2 EnemyPosition)
+    public void QuestTrackingProgress()
     {
-        Vector2 popupPosition = EnemyPosition;
-        popupPosition.x = Random.Range(EnemyPosition.x - 1.5f, EnemyPosition.x + 1.5f);
-        popupPosition.y = Random.Range(EnemyPosition.y - 1.5f, EnemyPosition.y + 1.5f);
-        Instantiate(damagePopUp, popupPosition, Quaternion.identity);
+        if(quest.isActive)
+        {
+            if(quest.goal.IsReached())
+            {
+                InitPlayer.player.currentEXP += quest.experienceReward;
+                quest.QuestComplete();
+            }
+        }
     }
     private void IsHeavyAttack()
     {
@@ -185,15 +212,21 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     }
     public void EffectLevelUp()
     {
-        Instantiate(effectLvlUp, transform.position, Quaternion.identity);
+        GameObject effect;
+        effect = Instantiate(effectLvlUp, transform.position, Quaternion.identity);
+        effect.transform.parent = this.transform;
+        if (InitPlayer.isKnight)
+        {
+            effect.transform.localPosition = new Vector2(effect.transform.localPosition.x, effect.transform.localPosition.y + 1f);
+        }
+        else
+        {
+            effect.transform.localPosition = new Vector2(effect.transform.localPosition.x - .3f, effect.transform.localPosition.y);
+        }
     }
-
-    public void LoadData(GameData data)
+    public void PlayerDeath()
     {
-        this.transform.position = data.playerPosition;
-    }
-    public void SaveData(ref GameData data)
-    {
-        data.playerPosition = this.transform.position;
+        GameObject fadeScreen = Instantiate(deathFadeScreen);
+        Destroy(fadeScreen, 5f);
     }
 }

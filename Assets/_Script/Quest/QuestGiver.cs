@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class QuestGiver : MonoBehaviour
 {
     public Quest quest;
-    public PlayerController player;
+    public PlayerController player; 
 
     public GameObject questWindow;
     public TextMeshProUGUI titleText;
@@ -28,16 +28,18 @@ public class QuestGiver : MonoBehaviour
         questWindow.SetActive(true);
         titleText.text = quest.title;
         descriptionText.text = quest.description;
-        requireText.text = quest.goal.currentAmount.ToString() + "/" + quest.goal.requireAmount.ToString() + " Goblin";
+        requireText.text = "Require:" + quest.goal.currentAmount.ToString() + "/" + quest.goal.requireAmount.ToString() + " Leader";
         experienceText.text = "Experience\n" + quest.experienceReward.ToString();
         masteryText.text = "Mastery\n" + quest.masteryReward.ToString();
     }
-    public void AcceptQuest()
+    public void AcceptQuest(GameObject NPCDialog)
     {
         questWindow.SetActive(false);
-        UI_Manager.modeUI = false;
+        NPCDialog.SetActive(true);
+        UI_Manager.modeUI = true;
         quest.isActive = true;
         player.quest = quest;
+        AlertController.instance.CreateAlert("Quest Accepted");
     }
     public void CloseQuest()
     {

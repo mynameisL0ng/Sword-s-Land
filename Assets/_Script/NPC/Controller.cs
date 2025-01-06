@@ -12,7 +12,7 @@ public class Controller : MonoBehaviour
     public GameObject eKey;
 
     public GameObject npcDialog; // UI Dialog
-    public string npcLine;
+    public string[] npcLine;
     public TextMeshProUGUI showLines;
     public string[] choiceLines;
     public TextMeshProUGUI[] showChoiceText;
@@ -37,6 +37,7 @@ public class Controller : MonoBehaviour
                 UI_Manager.modeUI = true;
             }
         }
+        QuestLine();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -55,14 +56,26 @@ public class Controller : MonoBehaviour
     {
         npcDialog.SetActive(inZone);
         npcIcon.sprite = spriteRenderer.sprite;
-        showLines.text = npcLine;
-        if(Type == TypeNPC.Quest)
+        
+        if (Type == TypeNPC.Quest)
         {
             QuestNPC();
         }
         else
         {
             TalkNPC();
+        }
+    }
+    void QuestLine()
+    {
+        if (!InitPlayer.player.playerObject.GetComponent<PlayerController>().quest.isActive)
+        {
+            showLines.text = npcLine[0];
+        }
+        else
+        {
+            buttonGroup.SetActive(false);
+            showLines.text = npcLine[1];
         }
     }
     void QuestNPC()

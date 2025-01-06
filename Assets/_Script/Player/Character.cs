@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public abstract class Character
 {
@@ -30,7 +31,7 @@ public abstract class Character
     public float horizontalInPut;
     public bool isAttacking;
     public bool isHoldRightMouse = false;
-    public bool isDie = false;
+    public bool isDie;
     public Rigidbody2D body { get; set; }
     protected Animator animator { get; set; }
     protected BoxCollider2D collider2D { get; set; }
@@ -39,20 +40,21 @@ public abstract class Character
     public Character(GameObject gameObject)
     {
         playerObject = gameObject;
-        levelPoint = 0;
+        levelPoint = 1;
+        staminaRegeneration = 0.02f;
         skillPoint = 0;
+        currentEXP = 0;
+        expRequire = 250;
         attackPush = 2f;
         jumpPower = 6f;
-        currentEXP = 0;
-        expRequire = 100;
         body = gameObject.GetComponent<Rigidbody2D>();
         body.gravityScale = 1.496f;
         animator = gameObject.GetComponent<Animator>();
         collider2D = gameObject.GetComponent<BoxCollider2D>();
         transform = gameObject.transform;
         isAttacking = false;
+        isDie = false;
         timeRequireRegen = 3f;
-        staminaRegeneration = 0.02f;
     }
 
     internal void Update()
@@ -91,7 +93,7 @@ public abstract class Character
     
     private void PlayerAttack()
     {
-        if(currentStamina >= 10 && !isAttacking)
+        if(currentStamina >= 10 && !isAttacking)    
         {
             if (Input.GetButtonDown("Attack") && PlayerController.grounded && !UI_Manager.modeUI)
             {
@@ -137,11 +139,11 @@ public abstract class Character
     {
         if(currentEXP >= expRequire)
         {
-            levelPoint += 1;
             playerObject.GetComponent<PlayerController>().EffectLevelUp();
+            currentEXP -= expRequire;
+            levelPoint += 1;
+            expRequire += 250;
             skillPoint += 1;
-            expRequire *= 2;
-            currentEXP = 0;
         }
     }
 

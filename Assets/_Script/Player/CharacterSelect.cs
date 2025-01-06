@@ -15,7 +15,6 @@ public class CharacterSelect : MonoBehaviour
     [SerializeField] GameObject[] characterPrefabs;
     [SerializeField] GameObject[] infoCharacters;
     public static GameObject selectedCharacter;
-
     void Start()
     {
         index = 0;

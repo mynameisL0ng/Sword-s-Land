@@ -36,8 +36,12 @@ public class StatisticsUIController : MonoBehaviour
         statisticsText[3].text = "DMG: " + InitPlayer.player.attackDamage.ToString();
         statisticsText[4].text = "SPE: " + InitPlayer.player.speed.ToString();
         statisticsText[5].text = "STA Regen: " + (InitPlayer.player.staminaRegeneration * 100).ToString() + "%";
-        statisticsText[6].text = "Skill Point: " + InitPlayer.player.skillPoint.ToString();
+        statisticsText[6].text = "Point: " + InitPlayer.player.skillPoint.ToString();
         statisticsText[7].text = "Level: " + InitPlayer.player.levelPoint.ToString();
+        if(InitPlayer.isKnight) // skill default name
+            statisticsText[8].text = "Sanctified Sentinel";
+        else
+            statisticsText[8].text = "Skill: Heavenly Fall";
         if (!Check_SkillPoint()) // skill point = 0
         {
             statisticsText[6].color = new Color32(108, 108, 108, 255);

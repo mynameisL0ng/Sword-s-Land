@@ -9,8 +9,10 @@ public class Warrior : Character
     {
         healthPoint = 100;
         currentHealth = healthPoint;
-        staminaPoint = 50;
+
+        staminaPoint = 30;
         currentStamina = staminaPoint;
+
         attackDamage = 25;
         speed = 6;
         type = CharacterType.WARRIOR;
@@ -23,7 +25,7 @@ public class Warrior : Character
             isHoldRightMouse = Input.GetMouseButton(1);
             /*holdTime += Time.deltaTime;*/
             animator.SetBool("HoldHeavy", Input.GetButton("HeavyAttack"));
-            if(holdTime >= requireHoldTime)
+            if (holdTime >= requireHoldTime)
                 HeavyAttackAnimation();
         }
         else
@@ -50,4 +52,29 @@ public class Warrior : Character
         }
     }
 
+    void LoadWarrior()
+    {
+        if (PlayerPrefs.HasKey("W_Health") && PlayerPrefs.HasKey("W_Stamina") && PlayerPrefs.HasKey("W_AttackDamage") && PlayerPrefs.HasKey("W_Speed"))
+        {
+            healthPoint = PlayerPrefs.GetFloat("W_Health");
+            currentHealth = healthPoint;
+
+            staminaPoint = PlayerPrefs.GetFloat("W_Stamina");
+            currentStamina = staminaPoint;
+
+            attackDamage = PlayerPrefs.GetFloat("W_AttackDamage");
+            speed = PlayerPrefs.GetFloat("W_Speed");
+        }
+        else
+        {
+            healthPoint = 100;
+            currentHealth = healthPoint;
+
+            staminaPoint = 30;
+            currentStamina = staminaPoint;
+
+            attackDamage = 25;
+            speed = 6;
+        }
+    }
 }

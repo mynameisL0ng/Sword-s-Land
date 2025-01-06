@@ -9,29 +9,13 @@ public class InitPlayer : MonoBehaviour
     public static bool isKnight;
     GameObject playerObject;
     GameObject selectedCharacter;
-    PlayerController[] playerController;
+    float x, y; // get posistion of SavePoint
     void Awake()
     {
+        selectedCharacter = CharacterSelect.selectedCharacter;
         LoadPlayerPos();
-        playerController = FindObjectsOfType<PlayerController>();
-        if (playerController.Length == 0)
-        {
-            selectedCharacter = CharacterSelect.selectedCharacter;
-            playerObject = Instantiate(selectedCharacter, transform.position, Quaternion.identity);
-            playerObject.name = "Player";
-        }
-        if (FindObjectsOfType<InitPlayer>().Length > 1)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        DontDestroyOnLoad(gameObject);
-        if (playerController.Length > 1)
-        {
-            Destroy(playerController[0].gameObject);
-            return;
-        }
-        DontDestroyOnLoad(playerObject);
+        playerObject = Instantiate(selectedCharacter, transform.position, Quaternion.identity);
+        playerObject.name = "Player";
         switch (selectedCharacter.name)
         {
             case "Knight":
@@ -44,15 +28,24 @@ public class InitPlayer : MonoBehaviour
                 break;
         }
     }
-    void LoadPlayerPos()
+    public void LoadPlayerPos()
     {
-        if(PlayerPrefs.HasKey("X") && PlayerPrefs.HasKey("Y") && PlayerPrefs.HasKey("Z"))
+        if(selectedCharacter.name == "Knight" && PlayerPrefs.HasKey("K_SavePoint1_X") && PlayerPrefs.HasKey("K_SavePoint1_Y"))
         {
-            float x = PlayerPrefs.GetFloat("X");
-            float y = PlayerPrefs.GetFloat("Y");
-            float z = PlayerPrefs.GetFloat("Z");
-            gameObject.transform.position = new Vector3(x, y, z);
-            Debug.Log("Load success");
+            Debug.Log("Knight");
+            x = PlayerPrefs.GetFloat("K_SavePoint1_X");
+            y = PlayerPrefs.GetFloat("K_SavePoint1_Y");
+            Debug.Log(x + "," +  y);
+            transform.position = new Vector2(x, y);
         }
+        else if(selectedCharacter.name == "Warrior" && PlayerPrefs.HasKey("W_SavePoint1_X") && PlayerPrefs.HasKey("W_SavePoint1_Y"))
+        {
+            Debug.Log("Warrior");
+            x = PlayerPrefs.GetFloat("W_SavePoint1_X");
+            y = PlayerPrefs.GetFloat("W_SavePoint1_Y");
+            Debug.Log(x + "," + y);
+            transform.position = new Vector2(x, y);
+        }
+        
     }
 }

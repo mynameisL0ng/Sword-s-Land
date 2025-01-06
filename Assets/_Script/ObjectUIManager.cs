@@ -16,15 +16,23 @@ public class ObjectUIManager : MonoBehaviour
     }
     public void RestButton()
     {
+        ActiveSavePoint();
         InitPlayer.player.currentHealth = InitPlayer.player.healthPoint;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        SavePlayerPos();
+        ApplicationVariables.LoadingSceneName = "GamePlay";
+        SceneManager.LoadScene("LoadingScene");
     }
 
-    void SavePlayerPos()
+    void ActiveSavePoint()
     {
-        PlayerPrefs.SetFloat("X", InitPlayer.player.transform.position.x);
-        PlayerPrefs.SetFloat("Y", InitPlayer.player.transform.position.y);
-        PlayerPrefs.SetFloat("Z", InitPlayer.player.transform.position.z);
+        if(InitPlayer.isKnight)
+        {
+            PlayerPrefs.SetFloat("K_SavePoint1_X", InitPlayer.player.transform.position.x);
+            PlayerPrefs.SetFloat("K_SavePoint1_Y", InitPlayer.player.transform.position.y);
+        }
+        else
+        {
+            PlayerPrefs.SetFloat("W_SavePoint1_X", InitPlayer.player.transform.position.x);
+            PlayerPrefs.SetFloat("W_SavePoint1_Y", InitPlayer.player.transform.position.y);
+        }
     }
 }

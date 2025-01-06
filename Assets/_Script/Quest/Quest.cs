@@ -11,5 +11,11 @@ public class Quest
     public float experienceReward;
     public int masteryReward;
     
+    public void QuestComplete()
+    {
+        AlertController.instance.CreateAlert("Quest Completed");
+        isActive = false;
+    }
+
     public QuestGoal goal;
 }

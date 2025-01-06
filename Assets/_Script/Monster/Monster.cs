@@ -8,8 +8,9 @@ public abstract class Monster
     public float attackDamage { get; set; }
     public float expDrop { get; set; }
     protected float speed { get; set; }
-    private bool canAttack { get; set; }
     public bool Death { get; set; }
+
+    private bool canAttack { get; set; }
     private float timeCooldown { get; set; }
 
     protected enum Direction { LEFT, RIGHT }
@@ -128,6 +129,8 @@ public abstract class Monster
     }
     private void MonsterFlipToOldPos()
     {
+        stateAnimator = StateAnimator.RUN;
+        SetStateAnimator((int)stateAnimator);
         if (transform.position.x >= oldPosition.x)
         {
             direction = Direction.LEFT;
@@ -178,20 +181,31 @@ public abstract class Monster
     }
     public void Die()
     {
-        InitPlayer.player.currentEXP += expDrop;
+        if (InitPlayer.player.playerObject.GetComponent<PlayerController>().quest.isActive)
+        {
+            expDrop *= 1.5f;
+            InitPlayer.player.currentEXP += expDrop;
+        }
+        else
+        {
+            expDrop = 200;
+            InitPlayer.player.currentEXP += expDrop;
+        }
         collider2D.enabled = false;
         body.bodyType = RigidbodyType2D.Static;
         Death = true;
         animator.SetBool("Death", Death);
-        
-        // check player quest
-        if(InitPlayer.player.playerObject != null)
+        PlayerPrefs.SetFloat("CurrentEXP", InitPlayer.player.currentEXP);
+
+        // count player quest
+        if (InitPlayer.player.playerObject != null)
         {
             if(InitPlayer.player.playerObject.GetComponent<PlayerController>().quest.isActive)
             {
-                if ((int)monsterType == (int)InitPlayer.player.playerObject.GetComponent<PlayerController>().quest.goal.killType)
+                if (monsterType.ToString() == InitPlayer.player.playerObject.GetComponent<PlayerController>().quest.goal.killType.ToString())
                 {
-                    InitPlayer.player.playerObject.GetComponent<PlayerController>().quest.goal.currentAmount++;
+                    InitPlayer.player.playerObject.GetComponent<PlayerController>().quest.goal.EnemyKilled();
+                    Debug.Log(InitPlayer.player.playerObject.GetComponent<PlayerController>().quest.goal.currentAmount);
                 }
             }
         }
